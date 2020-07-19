@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sbootmybatis.dao.StudentMapper">
+
+    <resultMap id="studentMap" type="Student">
+        <id column="id" property="id" javaType="int" ></id>
+        <result column="name" property="name" javaType="String" ></result>
+        <result column="sex" property="sex" javaType="String" ></result>
+        <!-- 菜单级子级菜单权限属性map -->
+        <collection property="courses" ofType="Course">
+            <id column="courseId" property="id" javaType="int" jdbcType="INTEGER"/>
+            <result column="courseName" property="name" javaType="String" jdbcType="VARCHAR"/>
+            <!--课程分数-->
+            <association property="courseScore" javaType="CourseScore">
+                <id column="scoreId" property="id" javaType="int" jdbcType="INTEGER"/>
+                <result column="sorce" property="score" javaType="String" jdbcType="VARCHAR"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <sql id="stu_course_score">
+        stu.id,stu.name,stu.sex,
+        c.id courseId,c.name courseName,
+        cs.id scoreId,cs.sorce
+    </sql>
+
+    <select id="findById" parameterType="int" resultMap="studentMap" resultType="Student">
+        select
+            <include refid="stu_course_score"></include>
+        from student stu
+        LEFT JOIN student_course_recouse scr on scr.student_id = stu.id
+        LEFT JOIN course c on c.id = scr.course_id
+        LEFT JOIN coursescore cs on cs.student_id = stu.id and cs.course_id = c.id
+
+        <trim suffixOverrides="and" prefixOverrides="and">
+            <where>
+                <if test="id != null">
+                    and stu.id = #{id}
+                </if>
+            </where>
+        </trim>
+    </select>
+
+    <update id="saveStudent">
+        <!--<![CDATA[
+            call test(
+                #{a,mode=in,jdbcType=INTEGER},
+                #{a,mode=out,jdbcType=INTEGER}
+            )
+        ]]>-->
+    </update>
+</mapper>

@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+    <p th:text="${name == null } ? 'index2' : 'Hello '+${name}+' !'">index</p>
+</body>
+
+<script th:src="@{/common/js/jquery-3.5.1.js}"></script>
+<script>
+    $.ajax({
+        url : "/zhouxin/student/findStudent",
+        type : "post",
+        data : {id : "1"},
+        success:function(result){
+            console.log(result);
+        }
+    })
+</script>
+</html>
